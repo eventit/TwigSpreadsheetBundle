@@ -2,6 +2,8 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Twig\TokenParser;
 
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Node;
 use MewesK\TwigSpreadsheetBundle\Twig\Node\DrawingNode;
 
 /**
@@ -12,7 +14,7 @@ class DrawingTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      */
-    public function configureParameters(\Twig_Token $token): array
+    public function configureParameters(\Twig\Token $token): array
     {
         return [
             'path' => [
@@ -21,7 +23,7 @@ class DrawingTokenParser extends BaseTokenParser
             ],
             'properties' => [
                 'type' => self::PARAMETER_TYPE_ARRAY,
-                'default' => new \Twig_Node_Expression_Array([], $token->getLine()),
+                'default' => new ArrayExpression([], $token->getLine()),
             ],
         ];
     }
@@ -29,7 +31,7 @@ class DrawingTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      */
-    public function createNode(array $nodes = [], int $lineNo = 0): \Twig_Node
+    public function createNode(array $nodes = [], int $lineNo = 0): Node
     {
         return new DrawingNode($nodes, $this->getAttributes(), $lineNo, $this->getTag());
     }

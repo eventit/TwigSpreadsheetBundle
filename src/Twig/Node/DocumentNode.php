@@ -2,6 +2,7 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Twig\Node;
 
+use Twig\Compiler;
 use MewesK\TwigSpreadsheetBundle\Wrapper\PhpSpreadsheetWrapper;
 
 /**
@@ -10,9 +11,9 @@ use MewesK\TwigSpreadsheetBundle\Wrapper\PhpSpreadsheetWrapper;
 class DocumentNode extends BaseNode
 {
     /**
-     * @param \Twig_Compiler $compiler
+     * @param Compiler $compiler
      */
-    public function compile(\Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler->addDebugInfo($this)
             ->write("ob_start();\n")

@@ -2,6 +2,10 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Twig\TokenParser;
 
+use InvalidArgumentException;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Node;
 use MewesK\TwigSpreadsheetBundle\Twig\Node\HeaderFooterNode;
 use MewesK\TwigSpreadsheetBundle\Wrapper\HeaderFooterWrapper;
 
@@ -10,10 +14,7 @@ use MewesK\TwigSpreadsheetBundle\Wrapper\HeaderFooterWrapper;
  */
 class HeaderFooterTokenParser extends BaseTokenParser
 {
-    /**
-     * @var string
-     */
-    private $baseType;
+    private string $baseType;
 
     /**
      * HeaderFooterTokenParser constructor.
@@ -21,7 +22,7 @@ class HeaderFooterTokenParser extends BaseTokenParser
      * @param array  $attributes optional attributes for the corresponding node
      * @param string $baseType
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(array $attributes = [], string $baseType = HeaderFooterWrapper::BASETYPE_HEADER)
     {
@@ -33,16 +34,16 @@ class HeaderFooterTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      */
-    public function configureParameters(\Twig_Token $token): array
+    public function configureParameters(\Twig\Token $token): array
     {
         return [
             'type' => [
                 'type' => self::PARAMETER_TYPE_VALUE,
-                'default' => new \Twig_Node_Expression_Constant(null, $token->getLine()),
+                'default' => new ConstantExpression(null, $token->getLine()),
             ],
             'properties' => [
                 'type' => self::PARAMETER_TYPE_ARRAY,
-                'default' => new \Twig_Node_Expression_Array([], $token->getLine()),
+                'default' => new ArrayExpression([], $token->getLine()),
             ],
         ];
     }
@@ -50,9 +51,9 @@ class HeaderFooterTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
-    public function createNode(array $nodes = [], int $lineNo = 0): \Twig_Node
+    public function createNode(array $nodes = [], int $lineNo = 0): Node
     {
         return new HeaderFooterNode($nodes, $this->getAttributes(), $lineNo, $this->getTag(), $this->baseType);
     }

@@ -2,6 +2,7 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Tests\Twig;
 
+use Exception;
 /**
  * Class XlsxTwigTest.
  */
@@ -18,11 +19,10 @@ class XlsxTwigTest extends BaseTwigTest
     //
     // Tests
     //
-
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -56,7 +56,7 @@ class XlsxTwigTest extends BaseTwigTest
      *
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -72,7 +72,7 @@ class XlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -96,12 +96,12 @@ class XlsxTwigTest extends BaseTwigTest
 
         $headerFooter = $sheet->getHeaderFooter();
         static::assertNotNull($headerFooter, 'HeaderFooter does not exist');
-        static::assertContains('Left area header', $headerFooter->getOddHeader(), 'Unexpected value in oddHeader');
-        static::assertContains('12Center area header', $headerFooter->getOddHeader(), 'Unexpected value in oddHeader');
-        static::assertContains('12Right area header', $headerFooter->getOddHeader(), 'Unexpected value in oddHeader');
-        static::assertContains('Left area footer', $headerFooter->getOddFooter(), 'Unexpected value in oddFooter');
-        static::assertContains('12Center area footer', $headerFooter->getOddFooter(), 'Unexpected value in oddFooter');
-        static::assertContains('12Right area footer', $headerFooter->getOddFooter(), 'Unexpected value in oddFooter');
+        static::assertStringContainsString('Left area header', $headerFooter->getOddHeader(), 'Unexpected value in oddHeader');
+        static::assertStringContainsString('12Center area header', $headerFooter->getOddHeader(), 'Unexpected value in oddHeader');
+        static::assertStringContainsString('12Right area header', $headerFooter->getOddHeader(), 'Unexpected value in oddHeader');
+        static::assertStringContainsString('Left area footer', $headerFooter->getOddFooter(), 'Unexpected value in oddFooter');
+        static::assertStringContainsString('12Center area footer', $headerFooter->getOddFooter(), 'Unexpected value in oddFooter');
+        static::assertStringContainsString('12Right area footer', $headerFooter->getOddFooter(), 'Unexpected value in oddFooter');
 
         $drawings = $sheet->getDrawingCollection();
         static::assertCount(1, $drawings, 'Not enough drawings exist');
@@ -114,7 +114,7 @@ class XlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -149,7 +149,7 @@ class XlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -180,7 +180,7 @@ class XlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -220,7 +220,7 @@ class XlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -249,7 +249,7 @@ class XlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */

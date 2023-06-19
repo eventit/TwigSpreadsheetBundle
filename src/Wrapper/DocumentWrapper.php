@@ -2,6 +2,12 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
+use Twig\Environment;
+use RuntimeException;
+use LogicException;
+use InvalidArgumentException;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Twig\Loader\FilesystemLoader;
 use MewesK\TwigSpreadsheetBundle\Helper\Filesystem;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -19,7 +25,7 @@ class DocumentWrapper extends BaseWrapper
     /**
      * @var Spreadsheet|null
      */
-    protected $object;
+    protected $object = null;
     /**
      * @var array
      */
@@ -29,23 +35,20 @@ class DocumentWrapper extends BaseWrapper
      * DocumentWrapper constructor.
      *
      * @param array             $context
-     * @param \Twig_Environment $environment
+     * @param Environment $environment
      * @param array             $attributes
      */
-    public function __construct(array $context, \Twig_Environment $environment, array $attributes = [])
+    public function __construct(array $context, \Twig\Environment $environment, array $attributes = [])
     {
         parent::__construct($context, $environment);
-
-        $this->object = null;
         $this->attributes = $attributes;
     }
 
     /**
-     * @param array $properties
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws Exception
      */
     public function start(array $properties = [])
     {
@@ -68,17 +71,17 @@ class DocumentWrapper extends BaseWrapper
     }
 
     /**
-     * @throws \LogicException
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws LogicException
+     * @throws RuntimeException
+     * @throws InvalidArgumentException
+     * @throws Exception
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     * @throws \Symfony\Component\Filesystem\Exception\IOException
+     * @throws IOException
      */
     public function end()
     {
         if ($this->object === null) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
         $format = null;
@@ -108,8 +111,8 @@ class DocumentWrapper extends BaseWrapper
 
         // set up mPDF
         if ($format === 'pdf') {
-            if (!class_exists('\Mpdf\Mpdf')) {
-                throw new \RuntimeException('Error loading mPDF. Is mPDF correctly installed?');
+            if (!class_exists('\\' . \Mpdf\Mpdf::class)) {
+                throw new RuntimeException('Error loading mPDF. Is mPDF correctly installed?');
             }
             IOFactory::registerWriter('Pdf', Mpdf::class);
         }
@@ -165,7 +168,7 @@ class DocumentWrapper extends BaseWrapper
     /**
      * {@inheritdoc}
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws Exception
      */
     protected function configureMappings(): array
     {
@@ -199,7 +202,6 @@ class DocumentWrapper extends BaseWrapper
      * The path must start with the namespace.
      * Namespaces are case sensitive.
      *
-     * @param string $path
      *
      * @return string
      */
@@ -207,7 +209,7 @@ class DocumentWrapper extends BaseWrapper
     {
         $loader = $this->environment->getLoader();
 
-        if ($loader instanceof \Twig_Loader_Filesystem && mb_strpos($path, '@') === 0) {
+        if ($loader instanceof FilesystemLoader && mb_strpos($path, '@') === 0) {
             /*
              * @var \Twig_Loader_Filesystem
              */

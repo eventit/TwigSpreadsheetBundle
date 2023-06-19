@@ -2,6 +2,10 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
+use Twig\Environment;
+use InvalidArgumentException;
+use LogicException;
+use RuntimeException;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooter;
 
 /**
@@ -9,16 +13,16 @@ use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooter;
  */
 class HeaderFooterWrapper extends BaseWrapper
 {
-    const ALIGNMENT_CENTER = 'center';
-    const ALIGNMENT_LEFT = 'left';
-    const ALIGNMENT_RIGHT = 'right';
+    public const ALIGNMENT_CENTER = 'center';
+    public const ALIGNMENT_LEFT = 'left';
+    public const ALIGNMENT_RIGHT = 'right';
 
-    const BASETYPE_FOOTER = 'footer';
-    const BASETYPE_HEADER = 'header';
+    public const BASETYPE_FOOTER = 'footer';
+    public const BASETYPE_HEADER = 'header';
 
-    const TYPE_EVEN = 'even';
-    const TYPE_FIRST = 'first';
-    const TYPE_ODD = 'odd';
+    public const TYPE_EVEN = 'even';
+    public const TYPE_FIRST = 'first';
+    public const TYPE_ODD = 'odd';
 
     /**
      * @var SheetWrapper
@@ -28,81 +32,72 @@ class HeaderFooterWrapper extends BaseWrapper
     /**
      * @var HeaderFooter|null
      */
-    protected $object;
+    protected $object = null;
     /**
      * @var array
      */
-    protected $alignmentParameters;
+    protected $alignmentParameters = [];
 
     /**
      * HeaderFooterWrapper constructor.
      *
      * @param array             $context
-     * @param \Twig_Environment $environment
+     * @param Environment $environment
      * @param SheetWrapper      $sheetWrapper
      */
-    public function __construct(array $context, \Twig_Environment $environment, SheetWrapper $sheetWrapper)
+    public function __construct(array $context, \Twig\Environment $environment, SheetWrapper $sheetWrapper)
     {
         parent::__construct($context, $environment);
 
         $this->sheetWrapper = $sheetWrapper;
-
-        $this->object = null;
-        $this->alignmentParameters = [];
     }
 
     /**
-     * @param string $alignment
      *
-     * @throws \InvalidArgumentException
-     *
+     * @throws InvalidArgumentException
      * @return string
      */
     public static function validateAlignment(string $alignment): string
     {
         if (!\in_array($alignment, [self::ALIGNMENT_CENTER, self::ALIGNMENT_LEFT, self::ALIGNMENT_RIGHT], true)) {
-            throw new \InvalidArgumentException(sprintf('Unknown alignment "%s"', $alignment));
+            throw new InvalidArgumentException(sprintf('Unknown alignment "%s"', $alignment));
         }
 
         return $alignment;
     }
 
     /**
-     * @param string $baseType
      *
-     * @throws \InvalidArgumentException
-     *
+     * @throws InvalidArgumentException
      * @return string
      */
     public static function validateBaseType(string $baseType): string
     {
         if (!\in_array($baseType, [self::BASETYPE_FOOTER, self::BASETYPE_HEADER], true)) {
-            throw new \InvalidArgumentException(sprintf('Unknown base type "%s"', $baseType));
+            throw new InvalidArgumentException(sprintf('Unknown base type "%s"', $baseType));
         }
 
         return $baseType;
     }
 
     /**
-     * @param string      $baseType
      * @param string|null $type
-     * @param array       $properties
      *
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
-     * @throws \RuntimeException
+     * @throws InvalidArgumentException
+     * @throws LogicException
+     * @throws RuntimeException
      */
     public function start(string $baseType, string $type = null, array $properties = [])
     {
         if ($this->sheetWrapper->getObject() === null) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
         if ($type !== null) {
             $type = strtolower($type);
 
             if (!\in_array($type, [self::TYPE_EVEN, self::TYPE_FIRST, self::TYPE_ODD], true)) {
-                throw new \InvalidArgumentException(sprintf('Unknown type "%s"', $type));
+                throw new InvalidArgumentException(sprintf('Unknown type "%s"', $type));
             }
         }
 
@@ -116,13 +111,13 @@ class HeaderFooterWrapper extends BaseWrapper
     }
 
     /**
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
+     * @throws InvalidArgumentException
+     * @throws LogicException
      */
     public function end()
     {
         if ($this->object === null) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
         $value = implode('', $this->parameters['value']);
@@ -170,16 +165,13 @@ class HeaderFooterWrapper extends BaseWrapper
     }
 
     /**
-     * @param string $alignment
-     * @param array  $properties
-     *
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
+     * @throws InvalidArgumentException
+     * @throws LogicException
      */
     public function startAlignment(string $alignment, array $properties = [])
     {
         if ($this->object === null) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
         $alignment = self::validateAlignment(strtolower($alignment));
@@ -203,16 +195,16 @@ class HeaderFooterWrapper extends BaseWrapper
     /**
      * @param string $value
      *
-     * @throws \InvalidArgumentException
-     * @throws \LogicException
+     * @throws InvalidArgumentException
+     * @throws LogicException
      */
     public function endAlignment($value)
     {
         if ($this->object === null || !isset($this->alignmentParameters['type'])) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
-        if (strpos($this->parameters['value'][$this->alignmentParameters['type']], '&G') === false) {
+        if (!str_contains($this->parameters['value'][$this->alignmentParameters['type']], '&G')) {
             $this->parameters['value'][$this->alignmentParameters['type']] .= $value;
         }
 
@@ -243,9 +235,6 @@ class HeaderFooterWrapper extends BaseWrapper
         return $this->alignmentParameters;
     }
 
-    /**
-     * @param array $alignmentParameters
-     */
     public function setAlignmentParameters(array $alignmentParameters)
     {
         $this->alignmentParameters = $alignmentParameters;

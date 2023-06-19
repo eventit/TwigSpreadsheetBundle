@@ -2,6 +2,7 @@
 
 namespace MewesK\TwigSpreadsheetBundle\DependencyInjection;
 
+use Exception;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
@@ -15,7 +16,7 @@ class MewesKTwigSpreadsheetExtension extends ConfigurableExtension
     /**
      * {@inheritdoc}
      *
-     * @throws \Exception
+     * @throws Exception
      */
     protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
     {

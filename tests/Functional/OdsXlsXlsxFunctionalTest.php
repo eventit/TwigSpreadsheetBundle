@@ -2,6 +2,7 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Tests\Functional;
 
+use Exception;
 /**
  * Class OdsXlsXlsxFunctionalTest.
  */
@@ -23,11 +24,10 @@ class OdsXlsXlsxFunctionalTest extends BaseFunctionalTest
     //
     // Tests
     //
-
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -49,7 +49,7 @@ class OdsXlsXlsxFunctionalTest extends BaseFunctionalTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -58,14 +58,14 @@ class OdsXlsXlsxFunctionalTest extends BaseFunctionalTest
         $response = $this->getResponse('test_custom_response', ['templateName' => 'simple', '_format' => $format]);
 
         static::assertNotNull($response, 'Response does not exist');
-        static::assertContains('foobar.bin', $response->headers->get('Content-Disposition'), 'Unexpected or missing header "Content-Disposition"');
+        static::assertStringContainsString('foobar.bin', $response->headers->get('Content-Disposition'), 'Unexpected or missing header "Content-Disposition"');
         static::assertEquals(600, $response->getMaxAge(), 'Unexpected value in maxAge');
     }
 
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -86,7 +86,7 @@ class OdsXlsXlsxFunctionalTest extends BaseFunctionalTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */

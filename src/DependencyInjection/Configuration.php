@@ -2,6 +2,7 @@
 
 namespace MewesK\TwigSpreadsheetBundle\DependencyInjection;
 
+use RuntimeException;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -13,7 +14,7 @@ class Configuration implements ConfigurationInterface
     /**
      * {@inheritdoc}
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     public function getConfigTreeBuilder()
     {

@@ -2,6 +2,7 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Helper;
 
+use Traversable;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem as BaseFilesystem;
 
@@ -10,15 +11,12 @@ use Symfony\Component\Filesystem\Filesystem as BaseFilesystem;
  */
 class Filesystem
 {
-    /**
-     * @var BaseFilesystem
-     */
-    private static $delegate;
+    private static ?BaseFilesystem $delegate = null;
 
     /**
      * Creates a directory recursively.
      *
-     * @param string|array|\Traversable $dirs The directory path
+     * @param string|array|Traversable $dirs The directory path
      * @param int                       $mode The directory mode
      *
      * @throws IOException On any directory creation failure
@@ -31,7 +29,7 @@ class Filesystem
     /**
      * Checks the existence of files or directories.
      *
-     * @param string|array|\Traversable $files A filename, an array of files, or a \Traversable instance to check
+     * @param string|array|Traversable $files A filename, an array of files, or a \Traversable instance to check
      *
      * @return bool true if the file exists, false otherwise
      */
@@ -43,7 +41,7 @@ class Filesystem
     /**
      * Removes files or directories.
      *
-     * @param string|array|\Traversable $files A filename, an array of files, or a \Traversable instance to remove
+     * @param string|array|Traversable $files A filename, an array of files, or a \Traversable instance to remove
      *
      * @throws IOException When removal fails
      */

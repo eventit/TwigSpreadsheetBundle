@@ -2,6 +2,9 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
+use Twig\Environment;
+use RuntimeException;
+use LogicException;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\ColumnDimension;
@@ -15,11 +18,11 @@ class SheetWrapper extends BaseWrapper
     /**
      * @var int
      */
-    const COLUMN_DEFAULT = 1;
+    public const COLUMN_DEFAULT = 1;
     /**
      * @var int
      */
-    const ROW_DEFAULT = 1;
+    public const ROW_DEFAULT = 1;
 
     /**
      * @var DocumentWrapper
@@ -29,46 +32,41 @@ class SheetWrapper extends BaseWrapper
     /**
      * @var Worksheet|null
      */
-    protected $object;
+    protected $object = null;
     /**
      * @var null|int
      */
-    protected $row;
+    protected $row = null;
     /**
      * @var null|int
      */
-    protected $column;
+    protected $column = null;
 
     /**
      * SheetWrapper constructor.
      *
      * @param array             $context
-     * @param \Twig_Environment $environment
+     * @param Environment $environment
      * @param DocumentWrapper   $documentWrapper
      */
-    public function __construct(array $context, \Twig_Environment $environment, DocumentWrapper $documentWrapper)
+    public function __construct(array $context, \Twig\Environment $environment, DocumentWrapper $documentWrapper)
     {
         parent::__construct($context, $environment);
 
         $this->documentWrapper = $documentWrapper;
-
-        $this->object = null;
-        $this->row = null;
-        $this->column = null;
     }
 
     /**
      * @param int|string|null $index
-     * @param array $properties
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \RuntimeException
-     * @throws \LogicException
+     * @throws Exception
+     * @throws RuntimeException
+     * @throws LogicException
      */
     public function start($index, array $properties = [])
     {
         if ($this->documentWrapper->getObject() === null) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
         if (\is_int($index) && $index < $this->documentWrapper->getObject()->getSheetCount()) {
@@ -93,12 +91,12 @@ class SheetWrapper extends BaseWrapper
 
     /**
      * @throws \Exception
-     * @throws \LogicException
+     * @throws LogicException
      */
     public function end()
     {
         if ($this->object === null) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
         // auto-size columns
@@ -120,7 +118,7 @@ class SheetWrapper extends BaseWrapper
                             foreach ($cellIterator as $cell) {
                                 $this->object->getColumnDimension($cell->getColumn())->setAutoSize($value['autoSize']);
                             }
-                        } catch (Exception $e) {
+                        } catch (Exception) {
                             // ignore exceptions thrown when no cells are defined
                         }
                     } else {
@@ -154,9 +152,6 @@ class SheetWrapper extends BaseWrapper
         return $this->object;
     }
 
-    /**
-     * @param Worksheet $object
-     */
     public function setObject(Worksheet $object)
     {
         $this->object = $object;
@@ -197,18 +192,16 @@ class SheetWrapper extends BaseWrapper
     /**
      * {@inheritdoc}
      *
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
+     * @throws Exception
      */
     protected function configureMappings(): array
     {
         return [
             'autoFilter' => function ($value) { $this->object->setAutoFilter($value); },
             'columnDimension' => [
-                '__multi' => function ($index = 'default'): ColumnDimension {
-                    return $index === 'default' ?
-                        $this->object->getDefaultColumnDimension() :
-                        $this->object->getColumnDimension($index);
-                },
+                '__multi' => fn($index = 'default'): ColumnDimension => $index === 'default' ?
+                    $this->object->getDefaultColumnDimension() :
+                    $this->object->getColumnDimension($index),
                 'autoSize' => function ($value, ColumnDimension $object) { $object->setAutoSize($value); },
                 'collapsed' => function ($value, ColumnDimension $object) { $object->setCollapsed($value); },
                 'columnIndex' => function ($value, ColumnDimension $object) { $object->setColumnIndex($value); },
@@ -258,11 +251,9 @@ class SheetWrapper extends BaseWrapper
             ],
             'rightToLeft' => function ($value) { $this->object->setRightToLeft($value); },
             'rowDimension' => [
-                '__multi' => function ($index = 'default'): RowDimension {
-                    return $index === 'default' ?
-                        $this->object->getDefaultRowDimension() :
-                        $this->object->getRowDimension($index);
-                },
+                '__multi' => fn($index = 'default'): RowDimension => $index === 'default' ?
+                    $this->object->getDefaultRowDimension() :
+                    $this->object->getRowDimension($index),
                 'collapsed' => function ($value, RowDimension $object) { $object->setCollapsed($value); },
                 'outlineLevel' => function ($value, RowDimension $object) { $object->setOutlineLevel($value); },
                 'rowHeight' => function ($value, RowDimension $object) { $object->setRowHeight($value); },

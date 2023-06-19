@@ -2,6 +2,8 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Twig\Node;
 
+use InvalidArgumentException;
+use Twig\Compiler;
 use MewesK\TwigSpreadsheetBundle\Wrapper\HeaderFooterWrapper;
 
 /**
@@ -9,10 +11,7 @@ use MewesK\TwigSpreadsheetBundle\Wrapper\HeaderFooterWrapper;
  */
 class AlignmentNode extends BaseNode
 {
-    /**
-     * @var string
-     */
-    private $alignment;
+    private string $alignment;
 
     /**
      * AlignmentNode constructor.
@@ -23,7 +22,7 @@ class AlignmentNode extends BaseNode
      * @param string|null $tag
      * @param string      $alignment
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(array $nodes = [], array $attributes = [], int $lineNo = 0, string $tag = null, string $alignment = HeaderFooterWrapper::ALIGNMENT_CENTER)
     {
@@ -33,9 +32,9 @@ class AlignmentNode extends BaseNode
     }
 
     /**
-     * @param \Twig_Compiler $compiler
+     * @param Compiler $compiler
      */
-    public function compile(\Twig_Compiler $compiler)
+    public function compile(\Twig\Compiler $compiler)
     {
         $compiler->addDebugInfo($this)
             ->write(self::CODE_FIX_CONTEXT)

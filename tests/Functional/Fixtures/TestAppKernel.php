@@ -2,6 +2,12 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Tests\Functional\Fixtures;
 
+use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
+use Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle;
+use MewesK\TwigSpreadsheetBundle\MewesKTwigSpreadsheetBundle;
+use MewesK\TwigSpreadsheetBundle\Tests\Functional\Fixtures\TestBundle\TestBundle;
+use Exception;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
@@ -10,15 +16,9 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class TestAppKernel extends Kernel
 {
-    /**
-     * @var string
-     */
-    private $cacheDir;
+    private ?string $cacheDir = null;
 
-    /**
-     * @var string
-     */
-    private $logDir;
+    private ?string $logDir = null;
 
     /**
      * {@inheritdoc}
@@ -26,18 +26,18 @@ class TestAppKernel extends Kernel
     public function registerBundles()
     {
         return [
-            new \Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
-            new \Symfony\Bundle\TwigBundle\TwigBundle(),
-            new \Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new \MewesK\TwigSpreadsheetBundle\MewesKTwigSpreadsheetBundle(),
-            new \MewesK\TwigSpreadsheetBundle\Tests\Functional\Fixtures\TestBundle\TestBundle(),
+            new FrameworkBundle(),
+            new TwigBundle(),
+            new SensioFrameworkExtraBundle(),
+            new MewesKTwigSpreadsheetBundle(),
+            new TestBundle(),
         ];
     }
 
     /**
      * {@inheritdoc}
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
@@ -52,9 +52,6 @@ class TestAppKernel extends Kernel
         return $this->cacheDir;
     }
 
-    /**
-     * @param string $cacheDir
-     */
     public function setCacheDir(string $cacheDir)
     {
         $this->cacheDir = $cacheDir;
@@ -68,9 +65,6 @@ class TestAppKernel extends Kernel
         return $this->logDir;
     }
 
-    /**
-     * @param string $logDir
-     */
     public function setLogDir(string $logDir)
     {
         $this->logDir = $logDir;

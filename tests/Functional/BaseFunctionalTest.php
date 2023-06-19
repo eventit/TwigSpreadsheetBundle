@@ -2,6 +2,8 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Tests\Functional;
 
+use Symfony\Component\Filesystem\Exception\IOException;
+use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use MewesK\TwigSpreadsheetBundle\Helper\Filesystem;
 use MewesK\TwigSpreadsheetBundle\Tests\Functional\Fixtures\TestAppKernel;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -17,8 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class BaseFunctionalTest extends WebTestCase
 {
-    const CACHE_PATH = './../../var/cache/twig';
-    const RESULT_PATH = './../../var/result';
+    public const CACHE_PATH = './../../var/cache/twig';
+    public const RESULT_PATH = './../../var/result';
 
     /**
      * @var string
@@ -33,9 +35,9 @@ abstract class BaseFunctionalTest extends WebTestCase
     /**
      * {@inheritdoc}
      *
-     * @throws \Symfony\Component\Filesystem\Exception\IOException
+     * @throws IOException
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         // remove temp files
         Filesystem::remove(sprintf('%s/%s', static::CACHE_PATH, str_replace('\\', DIRECTORY_SEPARATOR, static::class)));
@@ -66,21 +68,18 @@ abstract class BaseFunctionalTest extends WebTestCase
     }
 
     /**
-     * @throws \Symfony\Component\Filesystem\Exception\IOException
+     * @throws IOException
      */
-    public function setUp()
+    public function setUp(): void
     {
         // create client
         static::$client = static::createClient(['environment' => static::$ENVIRONMENT, 'debug' => false]);
     }
 
     /**
-     * @param string $routeName
-     * @param array $routeParameters
-     * @param string $format
      *
-     * @throws \Symfony\Component\Filesystem\Exception\IOException
-     * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
+     * @throws IOException
+     * @throws Exception
      *
      * @return Spreadsheet
      */

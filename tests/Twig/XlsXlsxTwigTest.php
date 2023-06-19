@@ -2,6 +2,7 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Tests\Twig;
 
+use Exception;
 use PhpOffice\PhpSpreadsheet\Shared\PasswordHasher;
 
 /**
@@ -20,11 +21,10 @@ class XlsXlsxTwigTest extends BaseTwigTest
     //
     // Tests
     //
-
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -44,7 +44,7 @@ class XlsXlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -82,7 +82,7 @@ class XlsXlsxTwigTest extends BaseTwigTest
      *
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -106,7 +106,7 @@ class XlsXlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -137,7 +137,7 @@ class XlsXlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -162,7 +162,7 @@ class XlsXlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -184,7 +184,7 @@ class XlsXlsxTwigTest extends BaseTwigTest
     /**
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */
@@ -225,7 +225,7 @@ class XlsXlsxTwigTest extends BaseTwigTest
      *
      * @param string $format
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @dataProvider formatProvider
      */

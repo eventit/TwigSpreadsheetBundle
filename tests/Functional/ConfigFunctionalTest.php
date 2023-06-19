@@ -2,6 +2,7 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Tests\Functional;
 
+use Exception;
 use MewesK\TwigSpreadsheetBundle\Twig\TwigSpreadsheetExtension;
 
 /**
@@ -17,9 +18,8 @@ class ConfigFunctionalTest extends OdsXlsXlsxFunctionalTest
     //
     // Tests
     //
-
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testPreCalculateFormulas()
     {
@@ -34,7 +34,7 @@ class ConfigFunctionalTest extends OdsXlsXlsxFunctionalTest
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testXmlCacheDirectory()
     {
@@ -51,7 +51,7 @@ class ConfigFunctionalTest extends OdsXlsXlsxFunctionalTest
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function testCsvWriterAttributes()
     {

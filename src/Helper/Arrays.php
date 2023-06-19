@@ -11,8 +11,6 @@ class Arrays
      * Merge two arrays recursively. Works the same as 'array_merge_recursive' but will only merge array values, other
      * values are overridden.
      *
-     * @param array $array1
-     * @param array $array2
      *
      * @return array
      */

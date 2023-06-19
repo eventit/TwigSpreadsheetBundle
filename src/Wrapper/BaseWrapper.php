@@ -2,6 +2,8 @@
 
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
+use Twig\Environment;
+use RuntimeException;
 /**
  * Class BaseWrapper.
  */
@@ -13,14 +15,14 @@ abstract class BaseWrapper
     protected $context;
 
     /**
-     * @var \Twig_Environment
+     * @var Environment
      */
     protected $environment;
 
     /**
      * @var array
      */
-    protected $parameters;
+    protected $parameters = [];
     /**
      * @var array
      */
@@ -28,16 +30,11 @@ abstract class BaseWrapper
 
     /**
      * BaseWrapper constructor.
-     *
-     * @param array             $context
-     * @param \Twig_Environment $environment
      */
-    public function __construct(array $context, \Twig_Environment $environment)
+    public function __construct(array $context, \Twig\Environment $environment)
     {
         $this->context = $context;
         $this->environment = $environment;
-
-        $this->parameters = [];
         $this->mappings = $this->configureMappings();
     }
 
@@ -49,9 +46,6 @@ abstract class BaseWrapper
         return $this->parameters;
     }
 
-    /**
-     * @param array $parameters
-     */
     public function setParameters(array $parameters)
     {
         $this->parameters = $parameters;
@@ -65,9 +59,6 @@ abstract class BaseWrapper
         return $this->mappings;
     }
 
-    /**
-     * @param array $mappings
-     */
     public function setMappings(array $mappings)
     {
         $this->mappings = $mappings;
@@ -84,11 +75,9 @@ abstract class BaseWrapper
     /**
      * Calls the matching mapping callable for each property.
      *
-     * @param array       $properties
      * @param array|null  $mappings
      * @param string|null $column
-     *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function setProperties(array $properties, array $mappings = null, string $column = null)
     {
@@ -98,7 +87,7 @@ abstract class BaseWrapper
 
         foreach ($properties as $key => $value) {
             if (!isset($mappings[$key])) {
-                throw new \RuntimeException(sprintf('Missing mapping for key "%s"', $key));
+                throw new RuntimeException(sprintf('Missing mapping for key "%s"', $key));
             }
 
             if (\is_array($value) && \is_array($mappings[$key])) {
@@ -123,7 +112,7 @@ abstract class BaseWrapper
                     $column !== null ? $mappings['__multi']($column) : null
                 );
             } else {
-                throw new \RuntimeException(sprintf('Invalid mapping for key "%s"', $key));
+                throw new RuntimeException(sprintf('Invalid mapping for key "%s"', $key));
             }
         }
     }
