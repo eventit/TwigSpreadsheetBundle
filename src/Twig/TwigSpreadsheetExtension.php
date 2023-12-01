@@ -43,7 +43,7 @@ class TwigSpreadsheetExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('xlsmergestyles', [$this, 'mergeStyles']),
@@ -57,7 +57,7 @@ class TwigSpreadsheetExtension extends AbstractExtension
      *
      * @throws InvalidArgumentException
      */
-    public function getTokenParsers()
+    public function getTokenParsers(): array
     {
         return [
             new AlignmentTokenParser([], HeaderFooterWrapper::ALIGNMENT_CENTER),
@@ -76,7 +76,7 @@ class TwigSpreadsheetExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getNodeVisitors()
+    public function getNodeVisitors(): array
     {
         return [
             new MacroContextNodeVisitor(),
