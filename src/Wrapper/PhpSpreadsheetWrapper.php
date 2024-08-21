@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
 use PhpOffice\PhpSpreadsheet\Exception;
@@ -7,6 +9,8 @@ use RuntimeException;
 use LogicException;
 use InvalidArgumentException;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Twig\Environment;
+
 /**
  * Class PhpSpreadsheetWrapper.
  */
@@ -21,9 +25,6 @@ class PhpSpreadsheetWrapper
      * Copies the PhpSpreadsheetWrapper instance from 'varargs' to '_tsb'. This is necessary for all Twig code running
      * in sub-functions (e.g. block, macro, ...) since the root context is lost. To fix the sub-context a reference to
      * the PhpSpreadsheetWrapper instance is included in all function calls.
-     *
-     *
-     * @return array
      */
     public static function fixContext(array $context): array
     {
@@ -48,7 +49,7 @@ class PhpSpreadsheetWrapper
     /**
      * PhpSpreadsheetWrapper constructor.
      */
-    public function __construct(array $context, \Twig\Environment $environment, array $attributes = [])
+    public function __construct(array $context, Environment $environment, array $attributes = [])
     {
         $this->documentWrapper = new DocumentWrapper($context, $environment, $attributes);
         $this->sheetWrapper = new SheetWrapper($context, $environment, $this->documentWrapper);
@@ -58,18 +59,12 @@ class PhpSpreadsheetWrapper
         $this->drawingWrapper = new DrawingWrapper($context, $environment, $this->sheetWrapper, $this->headerFooterWrapper, $attributes);
     }
 
-    /**
-     * @return int|null
-     */
-    public function getCurrentColumn()
+    public function getCurrentColumn(): ?int
     {
         return $this->sheetWrapper->getColumn();
     }
 
-    /**
-     * @return int|null
-     */
-    public function getCurrentRow()
+    public function getCurrentRow(): ?int
     {
         return $this->sheetWrapper->getRow();
     }
@@ -80,7 +75,7 @@ class PhpSpreadsheetWrapper
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      * @throws RuntimeException
      */
-    public function startDocument(array $properties = [])
+    public function startDocument(array $properties = []): void
     {
         $this->documentWrapper->start($properties);
     }
@@ -93,7 +88,7 @@ class PhpSpreadsheetWrapper
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @throws IOException
      */
-    public function endDocument()
+    public function endDocument(): void
     {
         $this->documentWrapper->end();
     }
@@ -105,7 +100,7 @@ class PhpSpreadsheetWrapper
      * @throws Exception
      * @throws RuntimeException
      */
-    public function startSheet($index = null, array $properties = [])
+    public function startSheet($index = null, array $properties = []): void
     {
         $this->sheetWrapper->start($index, $properties);
     }
@@ -114,17 +109,15 @@ class PhpSpreadsheetWrapper
      * @throws LogicException
      * @throws \Exception
      */
-    public function endSheet()
+    public function endSheet(): void
     {
         $this->sheetWrapper->end();
     }
 
     /**
-     * @param int|null $index
-     *
      * @throws LogicException
      */
-    public function startRow(int $index = null)
+    public function startRow(?int $index = null): void
     {
         $this->rowWrapper->start($index);
     }
@@ -132,46 +125,40 @@ class PhpSpreadsheetWrapper
     /**
      * @throws LogicException
      */
-    public function endRow()
+    public function endRow(): void
     {
         $this->rowWrapper->end();
     }
 
     /**
-     * @param int|null   $index
-     *
      * @throws InvalidArgumentException
      * @throws LogicException
      * @throws RuntimeException
      */
-    public function startCell(int $index = null, array $properties = [])
+    public function startCell(?int $index = null, array $properties = []): void
     {
         $this->cellWrapper->start($index, $properties);
     }
 
     /**
-     * @param null|mixed $value
-     *
      * @throws Exception
      */
-    public function setCellValue($value = null)
+    public function setCellValue(mixed $value = null): void
     {
         $this->cellWrapper->value($value);
     }
 
-    public function endCell()
+    public function endCell(): void
     {
         $this->cellWrapper->end();
     }
 
     /**
-     * @param string|null $type
-     *
      * @throws LogicException
      * @throws RuntimeException
      * @throws InvalidArgumentException
      */
-    public function startHeaderFooter(string $baseType, string $type = null, array $properties = [])
+    public function startHeaderFooter(string $baseType, ?string $type = null, array $properties = []): void
     {
         $this->headerFooterWrapper->start($baseType, $type, $properties);
     }
@@ -180,18 +167,16 @@ class PhpSpreadsheetWrapper
      * @throws LogicException
      * @throws InvalidArgumentException
      */
-    public function endHeaderFooter()
+    public function endHeaderFooter(): void
     {
         $this->headerFooterWrapper->end();
     }
 
     /**
-     * @param null|string $type
-     *
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function startAlignment(string $type = null, array $properties = [])
+    public function startAlignment(?string $type = null, array $properties = []): void
     {
         $this->headerFooterWrapper->startAlignment($type, $properties);
     }
@@ -202,7 +187,7 @@ class PhpSpreadsheetWrapper
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function endAlignment(string $value = null)
+    public function endAlignment(string $value = null): void
     {
         $this->headerFooterWrapper->endAlignment($value);
     }
@@ -215,12 +200,12 @@ class PhpSpreadsheetWrapper
      * @throws RuntimeException
      * @throws Exception
      */
-    public function startDrawing(string $path, array $properties = [])
+    public function startDrawing(string $path, array $properties = []): void
     {
         $this->drawingWrapper->start($path, $properties);
     }
 
-    public function endDrawing()
+    public function endDrawing(): void
     {
         $this->drawingWrapper->end();
     }

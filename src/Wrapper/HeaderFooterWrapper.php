@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
 use Twig\Environment;
@@ -24,28 +26,16 @@ class HeaderFooterWrapper extends BaseWrapper
     public const TYPE_FIRST = 'first';
     public const TYPE_ODD = 'odd';
 
-    /**
-     * @var SheetWrapper
-     */
-    protected $sheetWrapper;
+    protected SheetWrapper $sheetWrapper;
 
-    /**
-     * @var HeaderFooter|null
-     */
-    protected $object = null;
-    /**
-     * @var array
-     */
-    protected $alignmentParameters = [];
+    protected ?HeaderFooter $object = null;
+
+    protected array $alignmentParameters = [];
 
     /**
      * HeaderFooterWrapper constructor.
-     *
-     * @param array             $context
-     * @param Environment $environment
-     * @param SheetWrapper      $sheetWrapper
      */
-    public function __construct(array $context, \Twig\Environment $environment, SheetWrapper $sheetWrapper)
+    public function __construct(array $context, Environment $environment, SheetWrapper $sheetWrapper)
     {
         parent::__construct($context, $environment);
 
@@ -53,9 +43,7 @@ class HeaderFooterWrapper extends BaseWrapper
     }
 
     /**
-     *
      * @throws InvalidArgumentException
-     * @return string
      */
     public static function validateAlignment(string $alignment): string
     {
@@ -67,9 +55,7 @@ class HeaderFooterWrapper extends BaseWrapper
     }
 
     /**
-     *
      * @throws InvalidArgumentException
-     * @return string
      */
     public static function validateBaseType(string $baseType): string
     {
@@ -81,13 +67,11 @@ class HeaderFooterWrapper extends BaseWrapper
     }
 
     /**
-     * @param string|null $type
-     *
      * @throws InvalidArgumentException
      * @throws LogicException
      * @throws RuntimeException
      */
-    public function start(string $baseType, string $type = null, array $properties = [])
+    public function start(string $baseType, ?string $type = null, array $properties = []): void
     {
         if ($this->sheetWrapper->getObject() === null) {
             throw new LogicException();
@@ -114,7 +98,7 @@ class HeaderFooterWrapper extends BaseWrapper
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function end()
+    public function end(): void
     {
         if ($this->object === null) {
             throw new LogicException();
@@ -168,7 +152,7 @@ class HeaderFooterWrapper extends BaseWrapper
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function startAlignment(string $alignment, array $properties = [])
+    public function startAlignment(string $alignment, array $properties = []): void
     {
         if ($this->object === null) {
             throw new LogicException();
@@ -193,12 +177,10 @@ class HeaderFooterWrapper extends BaseWrapper
     }
 
     /**
-     * @param string $value
-     *
      * @throws InvalidArgumentException
      * @throws LogicException
      */
-    public function endAlignment($value)
+    public function endAlignment(string $value): void
     {
         if ($this->object === null || !isset($this->alignmentParameters['type'])) {
             throw new LogicException();
@@ -211,18 +193,12 @@ class HeaderFooterWrapper extends BaseWrapper
         $this->alignmentParameters = [];
     }
 
-    /**
-     * @return null|HeaderFooter
-     */
-    public function getObject()
+    public function getObject(): ?HeaderFooter
     {
         return $this->object;
     }
 
-    /**
-     * @param null|HeaderFooter $object
-     */
-    public function setObject(HeaderFooter $object = null)
+    public function setObject(?HeaderFooter $object = null): void
     {
         $this->object = $object;
     }
@@ -235,7 +211,7 @@ class HeaderFooterWrapper extends BaseWrapper
         return $this->alignmentParameters;
     }
 
-    public function setAlignmentParameters(array $alignmentParameters)
+    public function setAlignmentParameters(array $alignmentParameters): void
     {
         $this->alignmentParameters = $alignmentParameters;
     }
