@@ -6,16 +6,11 @@ namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
 use Twig\Environment;
 use LogicException;
-/**
- * Class SheetWrapper.
- */
+
 class RowWrapper extends BaseWrapper
 {
     protected SheetWrapper $sheetWrapper;
 
-    /**
-     * RowWrapper constructor.
-     */
     public function __construct(array $context, Environment $environment, SheetWrapper $sheetWrapper)
     {
         parent::__construct($context, $environment);

@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * Class MewesKTwigSpreadsheetBundle.
- */
 class MewesKTwigSpreadsheetBundle extends Bundle
 {
 }

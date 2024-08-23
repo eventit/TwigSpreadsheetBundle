@@ -11,10 +11,10 @@ use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\ColumnDimension;
 use PhpOffice\PhpSpreadsheet\Worksheet\RowDimension;
+use function is_array;
+use function is_int;
+use function is_string;
 
-/**
- * Class SheetWrapper.
- */
 class SheetWrapper extends BaseWrapper
 {
     public const COLUMN_DEFAULT = 1;
@@ -29,13 +29,6 @@ class SheetWrapper extends BaseWrapper
 
     protected ?int $column = null;
 
-    /**
-     * SheetWrapper constructor.
-     *
-     * @param array             $context
-     * @param Environment $environment
-     * @param DocumentWrapper   $documentWrapper
-     */
     public function __construct(array $context, Environment $environment, DocumentWrapper $documentWrapper)
     {
         parent::__construct($context, $environment);
@@ -44,21 +37,19 @@ class SheetWrapper extends BaseWrapper
     }
 
     /**
-     * @param int|string|null $index
-     *
      * @throws Exception
      * @throws RuntimeException
      * @throws LogicException
      */
-    public function start($index, array $properties = [])
+    public function start(int|string|null $index, array $properties = []): void
     {
         if ($this->documentWrapper->getObject() === null) {
             throw new LogicException();
         }
 
-        if (\is_int($index) && $index < $this->documentWrapper->getObject()->getSheetCount()) {
+        if (is_int($index) && $index < $this->documentWrapper->getObject()->getSheetCount()) {
             $this->object = $this->documentWrapper->getObject()->setActiveSheetIndex($index);
-        } elseif (\is_string($index)) {
+        } elseif (is_string($index)) {
             if (!$this->documentWrapper->getObject()->sheetNameExists($index)) {
                 // create new sheet with a name
                 $this->documentWrapper->getObject()->createSheet()->setTitle($index);
@@ -89,7 +80,7 @@ class SheetWrapper extends BaseWrapper
         // auto-size columns
         if (
             isset($this->parameters['properties']['columnDimension']) &&
-            \is_array($this->parameters['properties']['columnDimension'])
+            is_array($this->parameters['properties']['columnDimension'])
         ) {
             /**
              * @var array $columnDimension
@@ -162,8 +153,6 @@ class SheetWrapper extends BaseWrapper
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws Exception
      */
     protected function configureMappings(): array

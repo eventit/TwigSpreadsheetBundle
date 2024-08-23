@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\EventListener;
 
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-/**
- * Class AddRequestFormatsListener.
- */
 class AddRequestFormatsListener implements EventSubscriberInterface
 {
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $event->getRequest()->setFormat('csv', 'text/csv');
         $event->getRequest()->setFormat('ods', 'application/vnd.oasis.opendocument.spreadsheet');

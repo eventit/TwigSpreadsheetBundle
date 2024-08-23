@@ -6,10 +6,9 @@ namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
 use RuntimeException;
 use Twig\Environment;
+use function is_array;
+use function is_callable;
 
-/**
- * Class BaseWrapper.
- */
 abstract class BaseWrapper
 {
     protected array $context;
@@ -20,9 +19,6 @@ abstract class BaseWrapper
 
     protected array $mappings;
 
-    /**
-     * BaseWrapper constructor.
-     */
     public function __construct(array $context, Environment $environment)
     {
         $this->context = $context;
@@ -71,18 +67,18 @@ abstract class BaseWrapper
                 throw new RuntimeException(sprintf('Missing mapping for key "%s"', $key));
             }
 
-            if (\is_array($value) && \is_array($mappings[$key])) {
+            if (is_array($value) && is_array($mappings[$key])) {
                 // recursion
                 if (isset($mappings[$key]['__multi'])) {
                     // handle multi target structure (with columns)
                     foreach ($value as $_column => $_value) {
-                        $this->setProperties($_value, $mappings[$key], (string) $_column);
+                        $this->setProperties($_value, $mappings[$key], (string)$_column);
                     }
                 } else {
                     // handle single target structure
                     $this->setProperties($value, $mappings[$key]);
                 }
-            } elseif (\is_callable($mappings[$key])) {
+            } elseif (is_callable($mappings[$key])) {
                 // call single and multi target mapping
                 // if column is set it is used to get object from the callback in __multi
                 $mappings[$key](

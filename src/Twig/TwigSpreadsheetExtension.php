@@ -1,11 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 use InvalidArgumentException;
-use Twig\Error\RuntimeError;
 use MewesK\TwigSpreadsheetBundle\Helper\Arrays;
 use MewesK\TwigSpreadsheetBundle\Twig\NodeVisitor\MacroContextNodeVisitor;
 use MewesK\TwigSpreadsheetBundle\Twig\NodeVisitor\SyntaxCheckNodeVisitor;
@@ -18,6 +17,10 @@ use MewesK\TwigSpreadsheetBundle\Twig\TokenParser\RowTokenParser;
 use MewesK\TwigSpreadsheetBundle\Twig\TokenParser\SheetTokenParser;
 use MewesK\TwigSpreadsheetBundle\Wrapper\HeaderFooterWrapper;
 use MewesK\TwigSpreadsheetBundle\Wrapper\PhpSpreadsheetWrapper;
+use Twig\Error\RuntimeError;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
+use function is_array;
 
 
 /**
@@ -32,9 +35,6 @@ class TwigSpreadsheetExtension extends AbstractExtension
     {
     }
 
-    /**
-     * @return array
-     */
     public function getAttributes(): array
     {
         return $this->attributes;
@@ -85,25 +85,21 @@ class TwigSpreadsheetExtension extends AbstractExtension
     }
 
     /**
-     *
      * @throws RuntimeError
-     *
-     * @return array
      */
     public function mergeStyles(array $style1, array $style2): array
     {
-        if (!\is_array($style1) || !\is_array($style2)) {
+        if (!is_array($style1) || !is_array($style2)) {
             throw new RuntimeError('The xlsmergestyles function only works with arrays.');
         }
         return Arrays::mergeRecursive($style1, $style2);
     }
 
     /**
-     *
      * @throws RuntimeError
-     * @return int|null
      */
-    public function getCurrentColumn(array $context) {
+    public function getCurrentColumn(array $context): ?int
+    {
         if (!isset($context[PhpSpreadsheetWrapper::INSTANCE_KEY])) {
             throw new RuntimeError('The PhpSpreadsheetWrapper instance is missing.');
         }
@@ -111,11 +107,10 @@ class TwigSpreadsheetExtension extends AbstractExtension
     }
 
     /**
-     *
      * @throws RuntimeError
-     * @return int|null
      */
-    public function getCurrentRow(array $context) {
+    public function getCurrentRow(array $context): ?int
+    {
         if (!isset($context[PhpSpreadsheetWrapper::INSTANCE_KEY])) {
             throw new RuntimeError('The PhpSpreadsheetWrapper instance is missing.');
         }

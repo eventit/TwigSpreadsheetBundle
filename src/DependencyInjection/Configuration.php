@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\DependencyInjection;
 
 use RuntimeException;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-/**
- * Class Configuration.
- */
 class Configuration implements ConfigurationInterface
 {
     /**
@@ -16,7 +15,7 @@ class Configuration implements ConfigurationInterface
      *
      * @throws RuntimeException
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('mewes_k_twig_spreadsheet');
         $rootNode = $treeBuilder->getRootNode();

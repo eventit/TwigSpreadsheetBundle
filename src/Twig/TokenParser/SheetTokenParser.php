@@ -1,21 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Twig\TokenParser;
 
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Node;
 use MewesK\TwigSpreadsheetBundle\Twig\Node\SheetNode;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
+use Twig\Token;
 
-/**
- * Class SheetTokenParser.
- */
 class SheetTokenParser extends BaseTokenParser
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function configureParameters(\Twig\Token $token): array
+    public function configureParameters(Token $token): array
     {
         return [
             'index' => [
@@ -40,7 +37,7 @@ class SheetTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      */
-    public function getTag()
+    public function getTag(): string
     {
         return 'xlssheet';
     }

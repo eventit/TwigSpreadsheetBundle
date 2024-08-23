@@ -1,20 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Twig\TokenParser;
 
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Node;
 use MewesK\TwigSpreadsheetBundle\Twig\Node\DocumentNode;
+use Twig\Token;
 
-/**
- * Class DocumentTokenParser.
- */
 class DocumentTokenParser extends BaseTokenParser
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function configureParameters(\Twig\Token $token): array
+    public function configureParameters(Token $token): array
     {
         return [
             'properties' => [
@@ -35,7 +32,7 @@ class DocumentTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      */
-    public function getTag()
+    public function getTag(): string
     {
         return 'xlsdocument';
     }

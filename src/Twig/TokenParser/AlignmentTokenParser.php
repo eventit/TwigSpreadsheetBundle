@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Twig\TokenParser;
 
 use InvalidArgumentException;
-use Twig\Node\Node;
 use MewesK\TwigSpreadsheetBundle\Twig\Node\AlignmentNode;
 use MewesK\TwigSpreadsheetBundle\Wrapper\HeaderFooterWrapper;
+use Twig\Node\Node;
 
-/**
- * Class AlignmentTokenParser.
- */
 class AlignmentTokenParser extends BaseTokenParser
 {
     private string $alignment;
@@ -17,7 +16,7 @@ class AlignmentTokenParser extends BaseTokenParser
     /**
      * AlignmentTokenParser constructor.
      *
-     * @param array  $attributes optional attributes for the corresponding node
+     * @param array $attributes optional attributes for the corresponding node
      * @param string $alignment
      *
      * @throws InvalidArgumentException
@@ -42,8 +41,8 @@ class AlignmentTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      */
-    public function getTag()
+    public function getTag(): string
     {
-        return 'xls'.$this->alignment;
+        return 'xls' . $this->alignment;
     }
 }

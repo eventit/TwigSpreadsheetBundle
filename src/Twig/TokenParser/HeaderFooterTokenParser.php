@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Twig\TokenParser;
 
 use InvalidArgumentException;
-use Twig\Node\Expression\ConstantExpression;
-use Twig\Node\Expression\ArrayExpression;
-use Twig\Node\Node;
 use MewesK\TwigSpreadsheetBundle\Twig\Node\HeaderFooterNode;
 use MewesK\TwigSpreadsheetBundle\Wrapper\HeaderFooterWrapper;
+use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
+use Twig\Token;
 
-/**
- * Class HeaderFooterTokenParser.
- */
 class HeaderFooterTokenParser extends BaseTokenParser
 {
     private string $baseType;
@@ -19,7 +19,7 @@ class HeaderFooterTokenParser extends BaseTokenParser
     /**
      * HeaderFooterTokenParser constructor.
      *
-     * @param array  $attributes optional attributes for the corresponding node
+     * @param array $attributes optional attributes for the corresponding node
      * @param string $baseType
      *
      * @throws InvalidArgumentException
@@ -31,10 +31,7 @@ class HeaderFooterTokenParser extends BaseTokenParser
         $this->baseType = HeaderFooterWrapper::validateBaseType(strtolower($baseType));
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureParameters(\Twig\Token $token): array
+    public function configureParameters(Token $token): array
     {
         return [
             'type' => [
@@ -61,8 +58,8 @@ class HeaderFooterTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      */
-    public function getTag()
+    public function getTag(): string
     {
-        return 'xls'.$this->baseType;
+        return 'xls' . $this->baseType;
     }
 }
