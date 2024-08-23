@@ -1,39 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
-use Twig\Environment;
-use Symfony\Component\Filesystem\Exception\IOException;
-use LogicException;
 use InvalidArgumentException;
-use RuntimeException;
-use PhpOffice\PhpSpreadsheet\Exception;
+use LogicException;
 use MewesK\TwigSpreadsheetBundle\Helper\Filesystem;
+use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooterDrawing;
+use RuntimeException;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Twig\Environment;
 
 /**
  * Class DrawingWrapper.
  */
 class DrawingWrapper extends BaseWrapper
 {
-    /**
-     * @var SheetWrapper
-     */
-    protected $sheetWrapper;
-    /**
-     * @var HeaderFooterWrapper
-     */
-    protected $headerFooterWrapper;
+    protected SheetWrapper $sheetWrapper;
 
-    /**
-     * @var Drawing|HeaderFooterDrawing|null
-     */
-    protected $object = null;
-    /**
-     * @var array
-     */
-    protected $attributes;
+    protected HeaderFooterWrapper $headerFooterWrapper;
+
+    protected Drawing|HeaderFooterDrawing|null $object = null;
+
+    protected array $attributes;
 
     /**
      * DrawingWrapper constructor.
@@ -44,8 +36,13 @@ class DrawingWrapper extends BaseWrapper
      * @param HeaderFooterWrapper $headerFooterWrapper
      * @param array             $attributes
      */
-    public function __construct(array $context, \Twig\Environment $environment, SheetWrapper $sheetWrapper, HeaderFooterWrapper $headerFooterWrapper, array $attributes = [])
-    {
+    public function __construct(
+        array $context,
+        Environment $environment,
+        SheetWrapper $sheetWrapper,
+        HeaderFooterWrapper $headerFooterWrapper,
+        array $attributes = []
+    ) {
         parent::__construct($context, $environment);
 
         $this->sheetWrapper = $sheetWrapper;
@@ -61,7 +58,7 @@ class DrawingWrapper extends BaseWrapper
      * @throws RuntimeException
      * @throws Exception
      */
-    public function start(string $path, array $properties = [])
+    public function start(string $path, array $properties = []): void
     {
         if ($this->sheetWrapper->getObject() === null) {
             throw new LogicException();
@@ -111,21 +108,18 @@ class DrawingWrapper extends BaseWrapper
         $this->setProperties($properties);
     }
 
-    public function end()
+    public function end(): void
     {
         $this->object = null;
         $this->parameters = [];
     }
 
-    /**
-     * @return Drawing
-     */
-    public function getObject(): Drawing
+    public function getObject(): ?Drawing
     {
         return $this->object;
     }
 
-    public function setObject(Drawing $object)
+    public function setObject(Drawing $object): void
     {
         $this->object = $object;
     }
@@ -161,7 +155,6 @@ class DrawingWrapper extends BaseWrapper
      *
      * @throws InvalidArgumentException
      * @throws IOException
-     * @return string
      */
     private function createTempCopy(string $path): string
     {

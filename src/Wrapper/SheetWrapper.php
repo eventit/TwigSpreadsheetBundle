@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
 use Twig\Environment;
@@ -15,32 +17,17 @@ use PhpOffice\PhpSpreadsheet\Worksheet\RowDimension;
  */
 class SheetWrapper extends BaseWrapper
 {
-    /**
-     * @var int
-     */
     public const COLUMN_DEFAULT = 1;
-    /**
-     * @var int
-     */
+
     public const ROW_DEFAULT = 1;
 
-    /**
-     * @var DocumentWrapper
-     */
-    protected $documentWrapper;
+    protected DocumentWrapper $documentWrapper;
 
-    /**
-     * @var Worksheet|null
-     */
-    protected $object = null;
-    /**
-     * @var null|int
-     */
-    protected $row = null;
-    /**
-     * @var null|int
-     */
-    protected $column = null;
+    protected ?Worksheet $object = null;
+
+    protected ?int $row = null;
+
+    protected ?int $column = null;
 
     /**
      * SheetWrapper constructor.
@@ -49,7 +36,7 @@ class SheetWrapper extends BaseWrapper
      * @param Environment $environment
      * @param DocumentWrapper   $documentWrapper
      */
-    public function __construct(array $context, \Twig\Environment $environment, DocumentWrapper $documentWrapper)
+    public function __construct(array $context, Environment $environment, DocumentWrapper $documentWrapper)
     {
         parent::__construct($context, $environment);
 
@@ -93,7 +80,7 @@ class SheetWrapper extends BaseWrapper
      * @throws \Exception
      * @throws LogicException
      */
-    public function end()
+    public function end(): void
     {
         if ($this->object === null) {
             throw new LogicException();
@@ -134,57 +121,42 @@ class SheetWrapper extends BaseWrapper
         $this->column = null;
     }
 
-    public function increaseRow()
+    public function increaseRow(): void
     {
         $this->row = $this->row === null ? self::ROW_DEFAULT : $this->row + 1;
     }
 
-    public function increaseColumn()
+    public function increaseColumn(): void
     {
         $this->column = $this->column === null ? self::COLUMN_DEFAULT : $this->column + 1;
     }
 
-    /**
-     * @return Worksheet
-     */
-    public function getObject(): Worksheet
+    public function getObject(): ?Worksheet
     {
         return $this->object;
     }
 
-    public function setObject(Worksheet $object)
+    public function setObject(Worksheet $object): void
     {
         $this->object = $object;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getRow()
+    public function getRow(): ?int
     {
         return $this->row;
     }
 
-    /**
-     * @param int|null $row
-     */
-    public function setRow($row)
+    public function setRow($row): void
     {
         $this->row = $row;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getColumn()
+    public function getColumn(): ?int
     {
         return $this->column;
     }
 
-    /**
-     * @param int|null $column
-     */
-    public function setColumn($column)
+    public function setColumn($column): void
     {
         $this->column = $column;
     }
@@ -253,13 +225,13 @@ class SheetWrapper extends BaseWrapper
             'rowDimension' => [
                 '__multi' => fn($index = 'default'): RowDimension => $index === 'default' ?
                     $this->object->getDefaultRowDimension() :
-                    $this->object->getRowDimension($index),
+                    $this->object->getRowDimension((int) $index),
                 'collapsed' => function ($value, RowDimension $object) { $object->setCollapsed($value); },
                 'outlineLevel' => function ($value, RowDimension $object) { $object->setOutlineLevel($value); },
-                'rowHeight' => function ($value, RowDimension $object) { $object->setRowHeight($value); },
-                'rowIndex' => function ($value, RowDimension $object) { $object->setRowIndex($value); },
+                'rowHeight' => function ($value, RowDimension $object) { $object->setRowHeight((float) $value); },
+                'rowIndex' => function ($value, RowDimension $object) { $object->setRowIndex((int) $value); },
                 'visible' => function ($value, RowDimension $object) { $object->setVisible($value); },
-                'xfIndex' => function ($value, RowDimension $object) { $object->setXfIndex($value); },
+                'xfIndex' => function ($value, RowDimension $object) { $object->setXfIndex((int) $value); },
                 'zeroHeight' => function ($value, RowDimension $object) { $object->setZeroHeight($value); },
             ],
             'sheetState' => function ($value) { $this->object->setSheetState($value); },

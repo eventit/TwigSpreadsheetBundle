@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
 use Twig\Environment;
@@ -15,15 +17,9 @@ use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
  */
 class CellWrapper extends BaseWrapper
 {
-    /**
-     * @var SheetWrapper
-     */
-    protected $sheetWrapper;
+    protected SheetWrapper $sheetWrapper;
 
-    /**
-     * @var Cell|null
-     */
-    protected $object = null;
+    protected ?Cell $object = null;
 
     /**
      * CellWrapper constructor.
@@ -40,13 +36,11 @@ class CellWrapper extends BaseWrapper
     }
 
     /**
-     * @param int|null $index
-     *
      * @throws InvalidArgumentException
      * @throws LogicException
      * @throws RuntimeException
      */
-    public function start(int $index = null, array $properties = [])
+    public function start(?int $index = null, array $properties = []): void
     {
         if ($this->sheetWrapper->getObject() === null) {
             throw new LogicException();
@@ -58,9 +52,10 @@ class CellWrapper extends BaseWrapper
             $this->sheetWrapper->setColumn($index);
         }
 
-        $this->object = $this->sheetWrapper->getObject()->getCellByColumnAndRow(
-            $this->sheetWrapper->getColumn(),
-            $this->sheetWrapper->getRow());
+        $this->object = $this->sheetWrapper->getObject()->getCell([
+            $this->sheetWrapper->getColumn() ?? 0,
+            $this->sheetWrapper->getRow() ?? 0
+        ]);
 
         $this->parameters['value'] = null;
         $this->parameters['properties'] = $properties;
@@ -68,11 +63,9 @@ class CellWrapper extends BaseWrapper
     }
 
     /**
-     * @param mixed|null $value
-     *
      * @throws Exception
      */
-    public function value($value = null)
+    public function value(mixed $value = null): void
     {
         if ($value !== null) {
             if (isset($this->parameters['properties']['dataType'])) {
@@ -85,24 +78,18 @@ class CellWrapper extends BaseWrapper
         $this->parameters['value'] = $value;
     }
 
-    public function end()
+    public function end(): void
     {
         $this->object = null;
         $this->parameters = [];
     }
 
-    /**
-     * @return Cell|null
-     */
-    public function getObject()
+    public function getObject(): ?Cell
     {
         return $this->object;
     }
 
-    /**
-     * @param Cell|null $object
-     */
-    public function setObject(Cell $object = null)
+    public function setObject(?Cell $object = null): void
     {
         $this->object = $object;
     }

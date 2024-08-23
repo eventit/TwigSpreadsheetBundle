@@ -1,13 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Wrapper;
 
-use Twig\Environment;
-use RuntimeException;
-use LogicException;
 use InvalidArgumentException;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Twig\Loader\FilesystemLoader;
+use LogicException;
 use MewesK\TwigSpreadsheetBundle\Helper\Filesystem;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -15,42 +13,36 @@ use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\BaseWriter;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf;
+use RuntimeException;
 use Symfony\Bridge\Twig\AppVariable;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Class DocumentWrapper.
  */
 class DocumentWrapper extends BaseWrapper
 {
-    /**
-     * @var Spreadsheet|null
-     */
-    protected $object = null;
-    /**
-     * @var array
-     */
-    protected $attributes;
+    protected ?Spreadsheet $object = null;
+
+    protected array $attributes;
 
     /**
      * DocumentWrapper constructor.
-     *
-     * @param array             $context
-     * @param Environment $environment
-     * @param array             $attributes
      */
-    public function __construct(array $context, \Twig\Environment $environment, array $attributes = [])
+    public function __construct(array $context, Environment $environment, array $attributes = [])
     {
         parent::__construct($context, $environment);
         $this->attributes = $attributes;
     }
 
     /**
-     *
      * @throws RuntimeException
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      * @throws Exception
      */
-    public function start(array $properties = [])
+    public function start(array $properties = []): void
     {
         // load template
         if (isset($properties['template'])) {
@@ -78,7 +70,7 @@ class DocumentWrapper extends BaseWrapper
      * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      * @throws IOException
      */
-    public function end()
+    public function end(): void
     {
         if ($this->object === null) {
             throw new LogicException();
@@ -94,7 +86,7 @@ class DocumentWrapper extends BaseWrapper
          // try Symfony request
         elseif (isset($this->context['app'])) {
             /**
-             * @var AppVariable
+             * @var AppVariable $appVariable
              */
             $appVariable = $this->context['app'];
             if ($appVariable instanceof AppVariable && $appVariable->getRequest() !== null) {
@@ -103,7 +95,7 @@ class DocumentWrapper extends BaseWrapper
         }
 
         // set default
-        if ($format === null || !\is_string($format)) {
+        if (!\is_string($format)) {
             $format = 'xlsx';
         } else {
             $format = strtolower($format);
@@ -131,9 +123,6 @@ class DocumentWrapper extends BaseWrapper
 
         // set special CSV writer attributes
         if ($writer instanceof Csv) {
-            /**
-             * @var Csv $writer
-             */
             $writer->setDelimiter($this->attributes['csv_writer']['delimiter']);
             $writer->setEnclosure($this->attributes['csv_writer']['enclosure']);
             $writer->setExcelCompatibility($this->attributes['csv_writer']['excel_compatibility']);
@@ -149,18 +138,12 @@ class DocumentWrapper extends BaseWrapper
         $this->parameters = [];
     }
 
-    /**
-     * @return Spreadsheet|null
-     */
-    public function getObject()
+    public function getObject(): ?Spreadsheet
     {
         return $this->object;
     }
 
-    /**
-     * @param Spreadsheet|null $object
-     */
-    public function setObject(Spreadsheet $object = null)
+    public function setObject(?Spreadsheet $object = null): void
     {
         $this->object = $object;
     }
@@ -200,7 +183,7 @@ class DocumentWrapper extends BaseWrapper
     /**
      * Resolves paths using Twig namespaces.
      * The path must start with the namespace.
-     * Namespaces are case sensitive.
+     * Namespaces are case-sensitive.
      *
      *
      * @return string
