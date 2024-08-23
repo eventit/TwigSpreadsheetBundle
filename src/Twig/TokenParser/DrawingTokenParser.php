@@ -1,20 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Twig\TokenParser;
 
+use MewesK\TwigSpreadsheetBundle\Twig\Node\DrawingNode;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Node;
-use MewesK\TwigSpreadsheetBundle\Twig\Node\DrawingNode;
+use Twig\Token;
 
-/**
- * Class DrawingTokenParser.
- */
 class DrawingTokenParser extends BaseTokenParser
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function configureParameters(\Twig\Token $token): array
+    public function configureParameters(Token $token): array
     {
         return [
             'path' => [
@@ -39,14 +36,11 @@ class DrawingTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      */
-    public function getTag()
+    public function getTag(): string
     {
         return 'xlsdrawing';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function hasBody(): bool
     {
         return false;

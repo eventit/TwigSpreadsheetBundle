@@ -1,20 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Twig\TokenParser;
 
+use MewesK\TwigSpreadsheetBundle\Twig\Node\RowNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
-use MewesK\TwigSpreadsheetBundle\Twig\Node\RowNode;
+use Twig\Token;
 
-/**
- * Class RowTokenParser.
- */
 class RowTokenParser extends BaseTokenParser
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function configureParameters(\Twig\Token $token): array
+    public function configureParameters(Token $token): array
     {
         return [
             'index' => [
@@ -35,7 +32,7 @@ class RowTokenParser extends BaseTokenParser
     /**
      * {@inheritdoc}
      */
-    public function getTag()
+    public function getTag(): string
     {
         return 'xlsrow';
     }

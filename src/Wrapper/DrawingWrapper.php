@@ -14,9 +14,6 @@ use RuntimeException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Twig\Environment;
 
-/**
- * Class DrawingWrapper.
- */
 class DrawingWrapper extends BaseWrapper
 {
     protected SheetWrapper $sheetWrapper;
@@ -27,22 +24,14 @@ class DrawingWrapper extends BaseWrapper
 
     protected array $attributes;
 
-    /**
-     * DrawingWrapper constructor.
-     *
-     * @param array               $context
-     * @param Environment $environment
-     * @param SheetWrapper        $sheetWrapper
-     * @param HeaderFooterWrapper $headerFooterWrapper
-     * @param array             $attributes
-     */
     public function __construct(
-        array $context,
-        Environment $environment,
-        SheetWrapper $sheetWrapper,
+        array               $context,
+        Environment         $environment,
+        SheetWrapper        $sheetWrapper,
         HeaderFooterWrapper $headerFooterWrapper,
-        array $attributes = []
-    ) {
+        array               $attributes = []
+    )
+    {
         parent::__construct($context, $environment);
 
         $this->sheetWrapper = $sheetWrapper;
@@ -96,9 +85,7 @@ class DrawingWrapper extends BaseWrapper
             $this->object->setPath($tempPath);
             $this->headerFooterWrapper->getObject()->addImage($this->object, $location);
             $this->headerFooterWrapper->setParameters($headerFooterParameters);
-        }
-
-        // add to worksheet
+        } // add to worksheet
         else {
             $this->object = new Drawing();
             $this->object->setWorksheet($this->sheetWrapper->getObject());
@@ -124,30 +111,59 @@ class DrawingWrapper extends BaseWrapper
         $this->object = $object;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureMappings(): array
     {
         return [
-            'coordinates' => function ($value) { $this->object->setCoordinates($value); },
-            'description' => function ($value) { $this->object->setDescription($value); },
-            'height' => function ($value) { $this->object->setHeight($value); },
-            'name' => function ($value) { $this->object->setName($value); },
-            'offsetX' => function ($value) { $this->object->setOffsetX($value); },
-            'offsetY' => function ($value) { $this->object->setOffsetY($value); },
-            'resizeProportional' => function ($value) { $this->object->setResizeProportional($value); },
-            'rotation' => function ($value) { $this->object->setRotation($value); },
+            'coordinates' => function ($value) {
+                $this->object->setCoordinates($value);
+            },
+            'description' => function ($value) {
+                $this->object->setDescription($value);
+            },
+            'height' => function ($value) {
+                $this->object->setHeight($value);
+            },
+            'name' => function ($value) {
+                $this->object->setName($value);
+            },
+            'offsetX' => function ($value) {
+                $this->object->setOffsetX($value);
+            },
+            'offsetY' => function ($value) {
+                $this->object->setOffsetY($value);
+            },
+            'resizeProportional' => function ($value) {
+                $this->object->setResizeProportional($value);
+            },
+            'rotation' => function ($value) {
+                $this->object->setRotation($value);
+            },
             'shadow' => [
-                'alignment' => function ($value) { $this->object->getShadow()->setAlignment($value); },
-                'alpha' => function ($value) { $this->object->getShadow()->setAlpha($value); },
-                'blurRadius' => function ($value) { $this->object->getShadow()->setBlurRadius($value); },
-                'color' => function ($value) { $this->object->getShadow()->getColor()->setRGB($value); },
-                'direction' => function ($value) { $this->object->getShadow()->setDirection($value); },
-                'distance' => function ($value) { $this->object->getShadow()->setDistance($value); },
-                'visible' => function ($value) { $this->object->getShadow()->setVisible($value); },
+                'alignment' => function ($value) {
+                    $this->object->getShadow()->setAlignment($value);
+                },
+                'alpha' => function ($value) {
+                    $this->object->getShadow()->setAlpha($value);
+                },
+                'blurRadius' => function ($value) {
+                    $this->object->getShadow()->setBlurRadius($value);
+                },
+                'color' => function ($value) {
+                    $this->object->getShadow()->getColor()->setRGB($value);
+                },
+                'direction' => function ($value) {
+                    $this->object->getShadow()->setDirection($value);
+                },
+                'distance' => function ($value) {
+                    $this->object->getShadow()->setDistance($value);
+                },
+                'visible' => function ($value) {
+                    $this->object->getShadow()->setVisible($value);
+                },
             ],
-            'width' => function ($value) { $this->object->setWidth($value); },
+            'width' => function ($value) {
+                $this->object->setWidth($value);
+            },
         ];
     }
 
@@ -160,13 +176,13 @@ class DrawingWrapper extends BaseWrapper
     {
         // create temp path
         $extension = pathinfo($path, PATHINFO_EXTENSION);
-        $tempPath = sprintf('%s/tsb_%s%s', $this->attributes['cache']['bitmap'], md5($path), $extension ? '.'.$extension : '');
+        $tempPath = sprintf('%s/tsb_%s%s', $this->attributes['cache']['bitmap'], md5($path), $extension ? '.' . $extension : '');
 
         // create local copy
         if (!Filesystem::exists($tempPath)) {
             $data = file_get_contents($path);
             if ($data === false) {
-                throw new InvalidArgumentException($path.' does not exist.');
+                throw new InvalidArgumentException($path . ' does not exist.');
             }
             Filesystem::dumpFile($tempPath, $data);
             unset($data);

@@ -1,17 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Twig\TokenParser;
 
-use Twig\TokenParser\AbstractTokenParser;
-use Twig\Node\Node;
 use Exception;
 use InvalidArgumentException;
 use Twig\Error\SyntaxError;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
-/**
- * Class BaseTokenParser.
- */
+use Twig\Node\Node;
+use Twig\Token;
+use Twig\TokenParser\AbstractTokenParser;
+use function count;
+
 abstract class BaseTokenParser extends AbstractTokenParser
 {
     /**
@@ -33,17 +35,11 @@ abstract class BaseTokenParser extends AbstractTokenParser
     {
     }
 
-    /**
-     * @return array
-     */
-    public function configureParameters(\Twig\Token $token): array
+    public function configureParameters(Token $token): array
     {
         return [];
     }
 
-    /**
-     * @return array
-     */
     public function getAttributes(): array
     {
         return $this->attributes;
@@ -51,17 +47,9 @@ abstract class BaseTokenParser extends AbstractTokenParser
 
     /**
      * Create a concrete node.
-     *
-     * @param array $nodes
-     * @param int   $lineNo
-     *
-     * @return Node
      */
     abstract public function createNode(array $nodes = [], int $lineNo = 0): Node;
 
-    /**
-     * @return bool
-     */
     public function hasBody(): bool
     {
         return true;
@@ -73,7 +61,7 @@ abstract class BaseTokenParser extends AbstractTokenParser
      * @throws Exception
      * @throws InvalidArgumentException
      */
-    public function parse(\Twig\Token $token)
+    public function parse(Token $token): Node
     {
         // parse parameters
         $nodes = $this->parseParameters($this->configureParameters($token));
@@ -87,22 +75,21 @@ abstract class BaseTokenParser extends AbstractTokenParser
     }
 
     /**
-     *
-     * @throws Exception
+     * @return AbstractExpression[]
      * @throws InvalidArgumentException
      * @throws SyntaxError
-     * @return AbstractExpression[]
+     * @throws Exception
      */
     private function parseParameters(array $parameterConfiguration = []): array
     {
         // parse expressions
         $expressions = [];
-        while (!$this->parser->getStream()->test(\Twig\Token::BLOCK_END_TYPE)) {
+        while (!$this->parser->getStream()->test(Token::BLOCK_END_TYPE)) {
             $expressions[] = $this->parser->getExpressionParser()->parseExpression();
         }
 
         // end of expressions
-        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
 
         // map expressions to parameters
         $parameters = [];
@@ -130,7 +117,7 @@ abstract class BaseTokenParser extends AbstractTokenParser
             $parameters[$parameterName] = $parameterOptions['default'];
         }
 
-        if (\count($expressions) > 0) {
+        if (count($expressions) > 0) {
             throw new SyntaxError('Too many parameters');
         }
 
@@ -144,8 +131,8 @@ abstract class BaseTokenParser extends AbstractTokenParser
     private function parseBody(): Node
     {
         // parse till matching end tag is found
-        $body = $this->parser->subparse(fn(\Twig\Token $token) => $token->test('end'.$this->getTag()), true);
-        $this->parser->getStream()->expect(\Twig\Token::BLOCK_END_TYPE);
+        $body = $this->parser->subparse(fn(Token $token) => $token->test('end' . $this->getTag()), true);
+        $this->parser->getStream()->expect(Token::BLOCK_END_TYPE);
         return $body;
     }
 }

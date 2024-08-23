@@ -1,23 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Helper;
 
-/**
- * Class Arrays.
- */
+use function is_array;
+
 class Arrays
 {
     /**
      * Merge two arrays recursively. Works the same as 'array_merge_recursive' but will only merge array values, other
      * values are overridden.
-     *
-     *
-     * @return array
      */
     public static function mergeRecursive(array &$array1, array &$array2): array
     {
         foreach ($array2 as $key => &$value) {
-            $array1[$key] = \is_array($value) && isset($array1[$key]) && \is_array($array1[$key]) ?
+            $array1[$key] = is_array($value) && isset($array1[$key]) && is_array($array1[$key]) ?
                 self::mergeRecursive($array1[$key], $value) :
                 $value;
         }

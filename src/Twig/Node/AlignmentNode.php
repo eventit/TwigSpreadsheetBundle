@@ -1,51 +1,39 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\Twig\Node;
 
 use InvalidArgumentException;
-use Twig\Compiler;
 use MewesK\TwigSpreadsheetBundle\Wrapper\HeaderFooterWrapper;
+use Twig\Compiler;
 
-/**
- * Class AlignmentNode.
- */
 class AlignmentNode extends BaseNode
 {
     private string $alignment;
 
     /**
-     * AlignmentNode constructor.
-     *
-     * @param array       $nodes
-     * @param array       $attributes
-     * @param int         $lineNo
-     * @param string|null $tag
-     * @param string      $alignment
-     *
      * @throws InvalidArgumentException
      */
-    public function __construct(array $nodes = [], array $attributes = [], int $lineNo = 0, string $tag = null, string $alignment = HeaderFooterWrapper::ALIGNMENT_CENTER)
+    public function __construct(array $nodes = [], array $attributes = [], int $lineNo = 0, ?string $tag = null, string $alignment = HeaderFooterWrapper::ALIGNMENT_CENTER)
     {
         parent::__construct($nodes, $attributes, $lineNo, $tag);
 
         $this->alignment = HeaderFooterWrapper::validateAlignment(strtolower($alignment));
     }
 
-    /**
-     * @param Compiler $compiler
-     */
-    public function compile(\Twig\Compiler $compiler)
+    public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this)
             ->write(self::CODE_FIX_CONTEXT)
-            ->write(self::CODE_INSTANCE.'->startAlignment(')
-                ->repr($this->alignment)
-            ->raw(');'.PHP_EOL)
+            ->write(self::CODE_INSTANCE . '->startAlignment(')
+            ->repr($this->alignment)
+            ->raw(');' . PHP_EOL)
             ->write("ob_start();\n")
             ->subcompile($this->getNode('body'))
-            ->write('$alignmentValue = trim(ob_get_clean());'.PHP_EOL)
-            ->write(self::CODE_INSTANCE.'->endAlignment($alignmentValue);'.PHP_EOL)
-            ->write('unset($alignmentValue);'.PHP_EOL);
+            ->write('$alignmentValue = trim(ob_get_clean());' . PHP_EOL)
+            ->write(self::CODE_INSTANCE . '->endAlignment($alignmentValue);' . PHP_EOL)
+            ->write('unset($alignmentValue);' . PHP_EOL);
     }
 
     /**

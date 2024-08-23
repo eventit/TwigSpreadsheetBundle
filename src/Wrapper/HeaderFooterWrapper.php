@@ -9,10 +9,8 @@ use InvalidArgumentException;
 use LogicException;
 use RuntimeException;
 use PhpOffice\PhpSpreadsheet\Worksheet\HeaderFooter;
+use function in_array;
 
-/**
- * Class HeaderFooterWrapper.
- */
 class HeaderFooterWrapper extends BaseWrapper
 {
     public const ALIGNMENT_CENTER = 'center';
@@ -32,9 +30,6 @@ class HeaderFooterWrapper extends BaseWrapper
 
     protected array $alignmentParameters = [];
 
-    /**
-     * HeaderFooterWrapper constructor.
-     */
     public function __construct(array $context, Environment $environment, SheetWrapper $sheetWrapper)
     {
         parent::__construct($context, $environment);
@@ -47,7 +42,7 @@ class HeaderFooterWrapper extends BaseWrapper
      */
     public static function validateAlignment(string $alignment): string
     {
-        if (!\in_array($alignment, [self::ALIGNMENT_CENTER, self::ALIGNMENT_LEFT, self::ALIGNMENT_RIGHT], true)) {
+        if (!in_array($alignment, [self::ALIGNMENT_CENTER, self::ALIGNMENT_LEFT, self::ALIGNMENT_RIGHT], true)) {
             throw new InvalidArgumentException(sprintf('Unknown alignment "%s"', $alignment));
         }
 
@@ -59,7 +54,7 @@ class HeaderFooterWrapper extends BaseWrapper
      */
     public static function validateBaseType(string $baseType): string
     {
-        if (!\in_array($baseType, [self::BASETYPE_FOOTER, self::BASETYPE_HEADER], true)) {
+        if (!in_array($baseType, [self::BASETYPE_FOOTER, self::BASETYPE_HEADER], true)) {
             throw new InvalidArgumentException(sprintf('Unknown base type "%s"', $baseType));
         }
 
@@ -80,7 +75,7 @@ class HeaderFooterWrapper extends BaseWrapper
         if ($type !== null) {
             $type = strtolower($type);
 
-            if (!\in_array($type, [self::TYPE_EVEN, self::TYPE_FIRST, self::TYPE_ODD], true)) {
+            if (!in_array($type, [self::TYPE_EVEN, self::TYPE_FIRST, self::TYPE_ODD], true)) {
                 throw new InvalidArgumentException(sprintf('Unknown type "%s"', $type));
             }
         }
@@ -216,9 +211,6 @@ class HeaderFooterWrapper extends BaseWrapper
         $this->alignmentParameters = $alignmentParameters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configureMappings(): array
     {
         return [

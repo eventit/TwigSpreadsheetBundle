@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace MewesK\TwigSpreadsheetBundle\DependencyInjection;
 
 use Exception;
@@ -8,9 +10,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 
-/**
- * Class MewesKTwigSpreadsheetExtension.
- */
 class MewesKTwigSpreadsheetExtension extends ConfigurableExtension
 {
     /**
@@ -18,9 +17,9 @@ class MewesKTwigSpreadsheetExtension extends ConfigurableExtension
      *
      * @throws Exception
      */
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container)
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
-        $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
         $definition = $container->getDefinition('mewes_k_twig_spreadsheet.twig_spreadsheet_extension');

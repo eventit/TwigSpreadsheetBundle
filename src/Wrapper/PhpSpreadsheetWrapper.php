@@ -10,10 +10,8 @@ use LogicException;
 use InvalidArgumentException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Twig\Environment;
+use function is_array;
 
-/**
- * Class PhpSpreadsheetWrapper.
- */
 class PhpSpreadsheetWrapper
 {
     /**
@@ -28,7 +26,7 @@ class PhpSpreadsheetWrapper
      */
     public static function fixContext(array $context): array
     {
-        if (!isset($context[self::INSTANCE_KEY]) && isset($context['varargs']) && \is_array($context['varargs'])) {
+        if (!isset($context[self::INSTANCE_KEY]) && isset($context['varargs']) && is_array($context['varargs'])) {
             foreach ($context['varargs'] as $arg) {
                 if ($arg instanceof self) {
                     $context[self::INSTANCE_KEY] = $arg;
@@ -70,7 +68,6 @@ class PhpSpreadsheetWrapper
     }
 
     /**
-     *
      * @throws Exception
      * @throws \PhpOffice\PhpSpreadsheet\Reader\Exception
      * @throws RuntimeException
@@ -94,13 +91,11 @@ class PhpSpreadsheetWrapper
     }
 
     /**
-     * @param int|string|null $index
-     *
      * @throws LogicException
      * @throws Exception
      * @throws RuntimeException
      */
-    public function startSheet($index = null, array $properties = []): void
+    public function startSheet(int|string|null $index = null, array $properties = []): void
     {
         $this->sheetWrapper->start($index, $properties);
     }
