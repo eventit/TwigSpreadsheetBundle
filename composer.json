@@ -17,15 +17,15 @@
     ],
     "require": {
         "php": "^8.0",
-        "symfony/framework-bundle": "~3.2|~4.0|~5.0",
+        "symfony/framework-bundle": "~3.2|~4.0|~5.0|~6.0",
         "twig/twig": "~2.0|>=3",
         "phpoffice/phpspreadsheet": "^2.2.2"
     },
     "require-dev": {
         "symfony/symfony": "~3.2|~4.0",
-        "sensio/framework-extra-bundle": "~3.0|~4.0|~5.0",
-        "symfony/phpunit-bridge": "~4.0|~5.0",
-        "phpunit/phpunit": "^9.5",
+        "sensio/framework-extra-bundle": "~3.0|~4.0|~5.0|~6.0",
+        "symfony/phpunit-bridge": "~4.0|~5.0|~6.0",
+        "phpunit/phpunit": "^9.5|^10.0",
         "mpdf/mpdf": "~8.0",
         "rector/rector": "^0.17.1"
     },
